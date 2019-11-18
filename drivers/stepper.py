@@ -6,13 +6,14 @@ GPIO.setmode(GPIO.BCM)
 
 
 class Stepper:
-  def __init__(self, d_pin, s_pin, sl_time=0.001, sw_time=0.00001):
+  def __init__(self, d_pin, s_pin, sl_time=0.0009, sw_time=0.00001, invert_direction=False):
     self.direction_pin = d_pin
     self.step_pin = s_pin
     self.sleep_time = sl_time
     self.switch_time = sw_time
     self.direction = GPIO.LOW
     self.running = False
+    self.invert_direction = invert_direction
     GPIO.setup(self.direction_pin, GPIO.OUT)
     GPIO.setup(self.step_pin, GPIO.OUT)
     GPIO.output(self.direction_pin, GPIO.LOW)
@@ -35,6 +36,9 @@ class Stepper:
   
   def set_direction(self, direction):
     self.direction = GPIO.HIGH if direction else GPIO.LOW
+    if self.invert_direction:
+      direction = not direction
+      
     GPIO.output(self.direction_pin, self.direction)
 
   async def step(self, steps=1):
@@ -43,12 +47,14 @@ class Stepper:
 
     self.running = True
     direction = GPIO.HIGH if steps < 0 else GPIO.LOW
+    if self.invert_direction:
+      direction = not direction
     if self.direction != direction:
       self.set_direction(direction)
     
     for i in range(abs(steps)):
       if not self.running:
-        return i
+        return i if steps > 0 else i*-1
       GPIO.output(self.step_pin, GPIO.HIGH)
       await asyncio.sleep(self.switch_time)
       GPIO.output(self.step_pin, GPIO.LOW)
