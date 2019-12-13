@@ -37,7 +37,7 @@ class MIDIHandler(server.Handler):
           self.logger.info(' '.join('Recieved command {} {} on ch{}  from {}'
           .format(command.command,command.params, 
           command.channel, peer.name).split()))
-          if command.command == 'note_on':
+          if command.command == 'note_on' or command.command == 'note_off':
             self.hand.handle_note_command(command)
           elif command.command == 'control_mode_change':
             self.hand.handle_control_change(command)
@@ -59,12 +59,12 @@ if __name__=="__main__":
   logging.basicConfig(level=logging.INFO, format='[%(asctime)s.%(msecs)03d][%(levelname)s]:\t%(message)s', datefmt='%m/%d/%Y %H:%M:%S')
   sc = SerialController('/dev/ttyACM0')
   rail = LinearActuator(sc)
-  index = HandServos.format_servo_data('index', 0, max_angle=35, inverted=True)
-  middle = HandServos.format_servo_data('middle', 1, max_angle=35, inverted=True)
-  ring = HandServos.format_servo_data('ring', 2, max_angle=62)
-  pinkie = HandServos.format_servo_data('pinkie', 3, min_angle=10, max_angle=70)
+  index = HandServos.format_servo_data('index', 0, min_angle=0, max_angle=80, inverted=True)
+  middle = HandServos.format_servo_data('middle', 1, min_angle=44, max_angle=100, inverted=True)
+  ring = HandServos.format_servo_data('ring', 2, min_angle=10, max_angle=75)
+  pinky = HandServos.format_servo_data('pinky', 3, min_angle=15, max_angle=105)
   
-  hs = HandServos([index, middle, ring, pinkie])
+  hs = HandServos([index, middle, ring, pinky])
   hand = Hand(rail, hs)
   port = 5051
   midi_server = server.Server([('::', port)])

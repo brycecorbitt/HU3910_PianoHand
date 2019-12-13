@@ -10,7 +10,7 @@ class Packet:
 		PACKET_SIZE = ID_SIZE + STATUS_SIZE + DATA_SIZE
 		PACKET_TYPES = {0: "Calibrate", 1: "Step Request", 2: "Set Position",
 			3: "Get Position", 4: "Set Switch Delay", 5: "Get Switch Delay", 6: "Set Step Delay",
-			7: "Get Step Delay", 8: "Force Stop", 9: "Get Limit Switch", 10: "Step Error", 11: "Stopped Request"}
+			7: "Get Step Delay", 8: "Force Stop", 9: "Get Limit Switch", 10: "Step Error", 11: "Stopped Request", 12: "Zero Motor"}
 
 		def __init__(self, id, status, data):
 			if id > 2**(Packet.ID_SIZE*8) or id < 0:
@@ -86,6 +86,9 @@ class PacketFactory:
 	@staticmethod
 	def get_limit_switch(number):
 			return Packet(PacketFactory.get_next_id(), 9, number)
+	@staticmethod
+	def zero_motor():
+		return Packet(PacketFactory.get_next_id(), 12, 0)
 
 
 # '/dev/ttyACM0' is default device for arduino, 9600 is default baud rate

@@ -39,16 +39,16 @@ class HandServos:
                     self.angle(l, servo['max_angle'])
 
 if __name__ == '__main__':
-    index = HandServos.format_servo_data('index', 0, max_angle=40, inverted=True)
-    middle = HandServos.format_servo_data('middle', 1, max_angle=35, inverted=True)
-    ring = HandServos.format_servo_data('ring', 2, max_angle=62)
-    pinkie = HandServos.format_servo_data('pinkie', 3, min_angle=0, max_angle=70)
+    index = HandServos.format_servo_data('index', 0, min_angle=20, max_angle=80, inverted=True)
+    middle = HandServos.format_servo_data('middle', 1, min_angle=44, max_angle=100, inverted=True)
+    ring = HandServos.format_servo_data('ring', 2, min_angle=10, max_angle=75)
+    pinky = HandServos.format_servo_data('pinky', 3, max_angle=65)
     wrist_left = HandServos.format_servo_data('wleft', 8, min_angle=110, max_angle=150)
     wrist_right = HandServos.format_servo_data('wright', 9, min_angle=130, max_angle=170)
     
     def move_wrist_down():
-        hs.angle('wleft', 150)
-        hs.angle('wright', 130)
+        hs.angle('wleft', 137)
+        hs.angle('wright', 142)
     def move_wrist_up():
         hs.angle('wleft', 110)
         hs.angle('wright', 170)
@@ -56,9 +56,9 @@ if __name__ == '__main__':
         hs.angle('wleft', 130)
         hs.angle('wright', 150)
 
-    hs = HandServos([index, middle, ring, pinkie, wrist_left, wrist_right])
+    hs = HandServos([index, middle, ring, pinky, wrist_left, wrist_right])
     
-    all = ['index', 'middle', 'ring', 'pinkie']
+    all = ['index', 'middle', 'ring', 'pinky']
 
     # hs.full_angle(all, 1)
     # time.sleep(.75)
@@ -82,13 +82,18 @@ if __name__ == '__main__':
         a1, a2 = data.split(' ')
         if a1 in all:
             a2 = int(a2)
-            hs.full_angle(a1, a2)
+            # if a2 == 0 or a2 == 1:
+            #     hs.full_angle(a1, a2)
+            # else:
+            hs.angle(a1,a2)
             continue   
         a1 = int(a1)
         a2 = int(a2)
         hs.angle('wleft', a1)
         hs.angle('wright', a2)
-        # if data == 'up':
-        #     hs.full_angle(all, 0)
-        # else:
-        #     hs.full_angle(all, 1)
+        # finger, down, up = data.split(' ')
+        # for i in range(3):
+        #     hs.angle(finger, int(down))
+        #     time.sleep(.75)
+        #     hs.angle(finger, int(up))
+        #     time.sleep(.75)

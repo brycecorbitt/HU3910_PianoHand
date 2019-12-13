@@ -37,6 +37,10 @@ class LinearActuator:
   def get_step_delay(self):
     message = PacketFactory.get_step_delay()
     return self.serial_controller.send_request(message)
+  
+  def zero_motor(self):
+    message = PacketFactory.zero_motor()
+    return self.serial_controller.send_request(message)
 
   def set_switch_time(self, sw_time=None):
     if sw_time:
@@ -91,6 +95,8 @@ class StepperExecutionException(Exception):
 
 
 if __name__ == '__main__':
+  POSITION_RECORDINGS = [0, 113, 234, 353, 470, 585, 705, 825, 935, 1055, 1175, 1290]
+
   from serial_control import SerialController
   import time
   import threading
@@ -101,7 +107,26 @@ if __name__ == '__main__':
   # print(s.get_far_limit_switch())
 
   # print(s.step(835))
+  s.set_step_delay(1000)
+  # val = s.calibrate().data
+  # print(val)
+  # while(True):
+  #   print(s.step(0))
+  #   print(s.step(1502))
+  #   # print(val)
+  #   s.step(0)
+  # while(True):
+  #   s.step(113)
+  #   time.sleep(.2)
+  #   s.step(0)
+  #   time.sleep(1)
+
   while True:
       data = int(input())
       print(s.step(data))
+      # for x in POSITION_RECORDINGS:
+      #   print(s.step(x))
+      #   time.sleep(.2)
+      # print(s.step(0))
+      # time.sleep(2)
     

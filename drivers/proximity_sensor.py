@@ -29,8 +29,8 @@ class ADC:
     return AnalogIn(ADC.mcp, number)
 
 # Code to test ADC by printing out channel 0 voltage
-# import time
-# channel = ADC.add_channel(0)
-# while True:
-#     print(channel.voltage, end="\r", flush=True)
-#     time.sleep(.2)
+import time
+channel = ADC.add_channel(0)
+while True:
+    print(channel.voltage, end="\r", flush=True)
+    time.sleep(.2)
